@@ -11,7 +11,7 @@ export default class MainScene extends Phaser.Scene {
         this.load.image('hero1', 'assets/images/crab hero.png');
         this.load.image('hero2', 'assets/images/heroleopard.png');
         this.load.image('hero3', 'assets/images/heroigaivota.png');
-        this.load.image('explosion', 'assets/images/explosion.gif');
+        this.load.spritesheet('explosion', 'assets/images/explosion.png', { frameWidth: 64, frameHeight: 64 });
     }
 
     create() {
@@ -89,6 +89,14 @@ export default class MainScene extends Phaser.Scene {
 
         // Create a group of mines (if you want several)
         this.mines = this.physics.add.group();
+
+        // Criar animação de explosão
+        this.anims.create({
+            key: 'explosion_anim',
+            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 15 }), // ajusta end conforme o nº de frames
+            frameRate: 20,
+            repeat: 0
+        });
     }
 
     update(time, delta) {
@@ -203,10 +211,11 @@ export default class MainScene extends Phaser.Scene {
      */
     handleMineHeroCollision(mine, heroSprite, hero) {
         mine.destroy();
-        // Show explosion sprite at mine position
+        // Show explosion animation at mine position
         const explosion = this.add.sprite(mine.x, mine.y, 'explosion').setDepth(20);
         explosion.setScale(1.2);
-        this.time.delayedCall(200, () => {
+        explosion.play('explosion_anim');
+        explosion.on('animationcomplete', () => {
             explosion.destroy();
         });
         // Optional: flash the hero to indicate hit
