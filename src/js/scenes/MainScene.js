@@ -99,8 +99,6 @@ export default class MainScene extends Phaser.Scene {
             }, null, this);
         });
 
-        this.lastDirection = { x: 0, y: -1 }; // Default: up
-
         // Cria um grupo de minas (se quiseres várias)
         this.mines = this.physics.add.group();
 
@@ -124,11 +122,6 @@ export default class MainScene extends Phaser.Scene {
         else if (this.cursors.down.isDown) moveY = 1;
 
         body.setVelocity(moveX * this.bossSpeed, moveY * this.bossSpeed);
-
-        // Update last direction if moving
-        if (moveX !== 0 || moveY !== 0) {
-            this.lastDirection = { x: moveX, y: moveY };
-        }
 
         // Boss attack: shoot projectile
         if (Phaser.Input.Keyboard.JustDown(this.shootKey) && (time - this.lastShotTime > this.shotCooldown)) {
@@ -205,12 +198,11 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
-     * Shoot a projectile from the boss in the direction of movement or up if idle.
+     * Shoot a projectile from the boss always upwards.
      */
     shootBossProjectile() {
-        let vx = this.lastDirection.x * 400;
-        let vy = this.lastDirection.y * 400;
-        if (vx === 0 && vy === 0) vy = -400;
+        let vx = 0;
+        let vy = -400; // Always shoot up
 
         // Usa o sprite do projétil
         const projectile = this.physics.add.sprite(this.boss.x, this.boss.y, 'projectile');
