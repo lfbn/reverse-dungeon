@@ -29,7 +29,7 @@ export default class MainScene extends Phaser.Scene {
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
 
-        //heroes
+        // Heroes
         this.heroes = [
             {
                 sprite: this.physics.add.sprite(150, 150, 'hero1'),
@@ -54,13 +54,12 @@ export default class MainScene extends Phaser.Scene {
         this.bossProjectiles = this.physics.add.group(); // Group for boss projectiles
         this.lastShotTime = 0; // For cooldown
         this.shotCooldown = 400; // ms
-        //TODO: fazer sprites funcionarem nas minas
-        //TODO: fazer com que as minas 
-        //TODO: mudar funcionamento do score
-        //TODO: fazer sistema de invocar os monstros
-        //TODO: fazer sistema de game over
-        //TODO: fazer sistema de waves
-        //TODO: fazer com que as minas sejam destruídas deois de serem ativadas
+        //TODO: make sprites work for mines
+        //TODO: make mines destroy after being triggered
+        //TODO: change score system
+        //TODO: implement monster summoning system
+        //TODO: implement game over system
+        //TODO: implement wave system
 
         // Boss health and score
         this.bossMaxHealth = 5;
@@ -99,10 +98,10 @@ export default class MainScene extends Phaser.Scene {
             }, null, this);
         });
 
-        // Cria um grupo de minas (se quiseres várias)
+        // Create a group of mines (if you want several)
         this.mines = this.physics.add.group();
 
-        // Adiciona uma mina na posição (400, 500)
+        // Add a mine at position (400, 500)
         this.mines.create(400, 500, 'mine');
 
         this.heroes.forEach(hero => {
@@ -139,13 +138,13 @@ export default class MainScene extends Phaser.Scene {
             const body = sprite.body;
             if (!body) return; // Skip if body is missing
 
-            // Place distance to the boss
+            // Calculate distance to the boss
             const dx = bossPos.x - sprite.x;
             const dy = bossPos.y - sprite.y;
             const distToBoss = Math.sqrt(dx * dx + dy * dy);
 
             if (hero.state === 'patrol') {
-                // If the boos is close change to chase
+                // If the boss is close, change to chase
                 if (distToBoss < chaseDistance) {
                     hero.state = 'chase';
                 } else {
@@ -155,20 +154,20 @@ export default class MainScene extends Phaser.Scene {
                     const pdy = target.y - sprite.y;
                     const distToPoint = Math.sqrt(pdx * pdx + pdy * pdy);
                     if (distToPoint < 5) {
-                        // Chegou ao ponto, passar ao próximo
+                        // Arrived at the point, go to the next
                         hero.patrolIndex = (hero.patrolIndex + 1) % hero.patrolPoints.length;
                     }
-                    // Move to the patrol pointMover para o ponto de patrulha
+                    // Move to the patrol point
                     const angle = Math.atan2(pdy, pdx);
                     body.setVelocity(Math.cos(angle) * hero.speed, Math.sin(angle) * hero.speed);
                 }
             } else if (hero.state === 'chase') {
-                // If the boss go away go back to patrol
+                // If the boss goes away, go back to patrol
                 if (distToBoss > loseDistance) {
                     hero.state = 'patrol';
                     body.setVelocity(0, 0);
                 } else {
-                    // Perseguir o boss
+                    // Chase the boss
                     const angle = Math.atan2(dy, dx);
                     body.setVelocity(Math.cos(angle) * hero.speed, Math.sin(angle) * hero.speed);
                 }
@@ -184,10 +183,10 @@ export default class MainScene extends Phaser.Scene {
         if (this.bossIsFlashing) return;
         this.bossIsFlashing = true;
         boss.fillColor = this.bossFlashColor;
-        // Reduzir vida do boss
+        // Reduce boss health
         this.bossHealth = Math.max(0, this.bossHealth - 1);
         this.healthText.setText('Health: ' + this.bossHealth);
-        // Aumentar pontuação
+        // Increase score
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
         // Flash for 200 ms, then revert
@@ -204,7 +203,7 @@ export default class MainScene extends Phaser.Scene {
         let vx = 0;
         let vy = -400; // Always shoot up
 
-        // Usa o sprite do projétil
+        // Use the projectile sprite
         const projectile = this.physics.add.sprite(this.boss.x, this.boss.y, 'projectile');
         projectile.body.setVelocity(vx, vy);
         projectile.body.setCollideWorldBounds(true);
