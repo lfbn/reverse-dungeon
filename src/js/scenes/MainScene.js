@@ -22,9 +22,9 @@ export default class MainScene extends Phaser.Scene {
         this.boss.body.setCircle(this.bossRadius);
         this.boss.body.setCollideWorldBounds(true);
         this.physics.add.existing(this.boss);
-        this.bossProjectiles = this.physics.add.group();
-        this.lastShotTtime = 0;
-        this.shotCoolDown = 400;
+        this.bossMines = this.physics.add.group();
+        this.lastShotTime = 0;
+        this.shotCooldown = 400;
         this.bossMaxHealth = 5;
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
@@ -49,17 +49,6 @@ export default class MainScene extends Phaser.Scene {
         this.heroes.forEach(hero => {
             hero.sprite.setCollideWorldBounds(true)
         });
-
-        // Boss projectile group
-        this.bossProjectiles = this.physics.add.group(); // Group for boss projectiles
-        this.lastShotTime = 0; // For cooldown
-        this.shotCooldown = 400; // ms
-        //TODO: make sprites work for mines
-        //TODO: make mines destroy after being triggered
-        //TODO: change score system
-        //TODO: implement monster summoning system
-        //TODO: implement game over system
-        //TODO: implement wave system
 
         // Boss health and score
         this.bossMaxHealth = 5;
@@ -92,9 +81,9 @@ export default class MainScene extends Phaser.Scene {
         // Overlap detection
         this.heroes.forEach(hero => {
             this.physics.add.overlap(this.boss, hero.sprite, this.handleBossHeroCollision, null, this);
-            // Projectile-hero overlap
-            this.physics.add.overlap(this.bossProjectiles, hero.sprite, (projectile, heroSprite) => {
-                this.handleProjectileHeroCollision(projectile, heroSprite, hero);
+            // Mine-hero overlap
+            this.physics.add.overlap(this.bossMines, hero.sprite, (mine, heroSprite) => {
+                this.handleMineHeroCollision(mine, heroSprite, hero);
             }, null, this);
         });
 
@@ -122,9 +111,9 @@ export default class MainScene extends Phaser.Scene {
 
         body.setVelocity(moveX * this.bossSpeed, moveY * this.bossSpeed);
 
-        // Boss attack: shoot projectile
+        // Boss attack: shoot mine
         if (Phaser.Input.Keyboard.JustDown(this.shootKey) && (time - this.lastShotTime > this.shotCooldown)) {
-            this.shootBossProjectile();
+            this.shootBossMine();
             this.lastShotTime = time;
         }
 
@@ -197,33 +186,33 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
-     * Shoot a projectile from the boss always upwards.
+     * Place a mine from the boss at the current position.
      */
-    shootBossProjectile() {
-        // Use the projectile sprite
-        const projectile = this.physics.add.sprite(this.boss.x, this.boss.y, 'projectile');
-        projectile.body.setCollideWorldBounds(true);
-        projectile.body.onWorldBounds = true;
-        projectile.body.setAllowGravity(false);
-        projectile.body.setBounce(1, 1);
+    shootBossMine() {
+        // Use the mine sprite
+        const mine = this.physics.add.sprite(this.boss.x, this.boss.y, 'mine');
+        mine.body.setCollideWorldBounds(true);
+        mine.body.onWorldBounds = true;
+        mine.body.setAllowGravity(false);
+        mine.body.setBounce(1, 1);
 
-        projectile.body.world.on('worldbounds', (body) => {
-            if (body.gameObject === projectile) {
-                projectile.destroy();
+        mine.body.world.on('worldbounds', (body) => {
+            if (body.gameObject === mine) {
+                mine.destroy();
             }
         });
 
-        this.bossProjectiles.add(projectile);
+        this.bossMines.add(mine);
     }
 
     /**
-     * Handle collision between boss projectile and hero.
-     * @param {Phaser.GameObjects.GameObject} projectile
+     * Handle collision between boss mine and hero.
+     * @param {Phaser.GameObjects.GameObject} mine
      * @param {Phaser.GameObjects.GameObject} heroSprite
      * @param {Object} hero
      */
-    handleProjectileHeroCollision(projectile, heroSprite, hero) {
-        projectile.destroy();
+    handleMineHeroCollision(mine, heroSprite, hero) {
+        mine.destroy();
         // Optional: add hero damage logic here
         // For now, just flash the hero
 
