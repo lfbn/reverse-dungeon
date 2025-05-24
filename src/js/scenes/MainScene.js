@@ -11,6 +11,7 @@ export default class MainScene extends Phaser.Scene {
         this.load.image('hero1', 'assets/images/crab hero.png');
         this.load.image('hero2', 'assets/images/heroleopard.png');
         this.load.image('hero3', 'assets/images/heroigaivota.png');
+        this.load.image('explosion', 'assets/images/explosion.gif');
     }
 
     create() {
@@ -179,7 +180,6 @@ export default class MainScene extends Phaser.Scene {
      * Place a mine from the boss at the current position.
      */
     shootBossMine() {
-        // Use the mine sprite
         const mine = this.physics.add.sprite(this.boss.x, this.boss.y, 'mine');
         mine.body.setCollideWorldBounds(true);
         mine.body.onWorldBounds = true;
@@ -203,12 +203,18 @@ export default class MainScene extends Phaser.Scene {
      */
     handleMineHeroCollision(mine, heroSprite, hero) {
         mine.destroy();
-        // Optional: add hero damage logic here
-        // For now, just flash the hero
-
+        // Show explosion sprite at mine position
+        const explosion = this.add.sprite(mine.x, mine.y, 'explosion').setDepth(20);
+        explosion.setScale(1.2);
+        this.time.delayedCall(200, () => {
+            explosion.destroy();
+        });
+        // Optional: flash the hero to indicate hit
         heroSprite.fillColor = 0x00ff00;
         this.time.delayedCall(120, () => {
             heroSprite.fillColor = 0xe74c3c;
         });
+        // Reduce hero speed
+        hero.speed = 50;
     }
 }
