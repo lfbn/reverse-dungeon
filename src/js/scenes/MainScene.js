@@ -200,12 +200,8 @@ export default class MainScene extends Phaser.Scene {
      * Shoot a projectile from the boss always upwards.
      */
     shootBossProjectile() {
-        let vx = 0;
-        let vy = -400; // Always shoot up
-
         // Use the projectile sprite
         const projectile = this.physics.add.sprite(this.boss.x, this.boss.y, 'projectile');
-        projectile.body.setVelocity(vx, vy);
         projectile.body.setCollideWorldBounds(true);
         projectile.body.onWorldBounds = true;
         projectile.body.setAllowGravity(false);
