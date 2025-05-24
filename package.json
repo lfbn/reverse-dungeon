@@ -1,0 +1,17 @@
+{
+  "name": "reverse-dungeon",
+  "version": "1.0.0",
+  "description": "A dungeon defense game where you play as the final boss",
+  "main": "src/js/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "phaser": "^3.70.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}

@@ -1,0 +1,38 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Reverse Dungeon
+
+O projeto chama-se Reverse Dungeon e é um jogo de defesa de masmorra, onde o jogador assume o papel do boss final.
+O objetivo é defender a masmorra contra ondas de heróis invasores, utilizando armadilhas, minions e habilidades especiais.
+
+## Resumo das principais características
+
+- Género: Estratégia e defesa de masmorra.
+- Tecnologias: HTML5, CSS3, JavaScript (ES6+), Phaser.js (versão 3.70.0), Vite (bundler).
+
+## Mecânicas
+
+- Controlas o boss final.
+- Defendes a masmorra colocando armadilhas e minions.
+- Geres recursos para construir defesas.
+- Enfrentas diferentes tipos de heróis, cada um com habilidades únicas.
+- Sistema de ondas de ataque.
+- Estilo visual: Pixel art retro, resolução 800x600.
+- Objetivo: Sobreviver ao maior número possível de ondas, desbloquear novas habilidades e gerir recursos eficientemente.
+
+## Estrutura do projeto
+
+- index.html: ponto de entrada da aplicação.
+- assets/: recursos como imagens, sons e sprites.
+- src/: código fonte, dividido em JavaScript (js/), cenas do jogo (scenes/), entidades (entities/), utilitários (utils/) e estilos CSS.
+- package.json: dependências e scripts do projeto.
+
+## Como correr o projeto
+
+- Instalar dependências: npm install
+- Iniciar servidor de desenvolvimento: npm run dev
+- Construir para produção: npm run build
+- Pré-visualizar produção: npm run preview
