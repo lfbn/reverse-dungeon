@@ -89,15 +89,6 @@ export default class MainScene extends Phaser.Scene {
 
         // Create a group of mines (if you want several)
         this.mines = this.physics.add.group();
-
-        // Add a mine at position (400, 500)
-        this.mines.create(400, 500, 'mine');
-
-        this.heroes.forEach(hero => {
-            this.physics.add.overlap(this.mines, hero.sprite, (mine, heroSprite) => {
-                mine.destroy();
-            }, null, this);
-        });
     }
 
     update(time, delta) {
