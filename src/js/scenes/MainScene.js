@@ -241,7 +241,14 @@ export default class MainScene extends Phaser.Scene {
     }
 
     handleMineHeroCollision(mine, heroSprite, hero) {
-        mine.destroy();
+        // Garantir que mine é mesmo uma mina
+        if (mine.texture && mine.texture.key !== 'mine') {
+            // Trocar argumentos se vierem trocados
+            [mine, heroSprite] = [heroSprite, mine];
+        }
+        if (!mine.active || !mine.texture || mine.texture.key !== 'mine') return; // Só atua sobre minas
+        mine.disableBody(true, true); // Torna a mina invisível e inativa imediatamente
+        this.bossMines.remove(mine, true, true); // Remove do grupo e destrói
         // Show explosion animation at mine position
         const explosion = this.add.sprite(mine.x, mine.y, 'explosion').setDepth(20);
         explosion.setScale(1.2);
