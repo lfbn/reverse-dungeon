@@ -9,6 +9,13 @@ export default class MainScene extends Phaser.Scene {
         this.heroSpeedBase = 100;
         this.heroTypes = ['hero1', 'hero2', 'hero3'];
         this.isGameOver = false;
+        // Monsters system
+        this.monsterTypes = [
+            { key: 'bloodeye', name: 'Blood Eye', img: 'assets/images/bloodeye.png' },
+            { key: 'esqueleto', name: 'Esqueleto', img: 'assets/images/esqueleto.png' },
+            { key: 'spacegoop', name: 'Spacegoop', img: 'assets/images/spacegoop.png' }
+        ];
+        this.availableMonsters = [ 'bloodeye', 'esqueleto', 'spacegoop' ]; // Start with 3
     }
 
     preload() {
@@ -18,6 +25,8 @@ export default class MainScene extends Phaser.Scene {
         this.load.image('hero2', 'assets/images/heroleopard.png');
         this.load.image('hero3', 'assets/images/heroigaivota.png');
         this.load.spritesheet('explosion', 'assets/images/explosion.png', { frameWidth: 64, frameHeight: 64 });
+        // Load monster images
+        this.monsterTypes.forEach(m => this.load.image(m.key, m.img));
     }
 
     create() {
@@ -38,6 +47,8 @@ export default class MainScene extends Phaser.Scene {
 
         // Heroes array (empty, will be filled by spawnWave)
         this.heroes = [];
+        // Monsters group
+        this.monsters = this.physics.add.group();
         // Spawn first wave
         this.spawnWave();
 
@@ -54,10 +65,25 @@ export default class MainScene extends Phaser.Scene {
             backgroundColor: '#222',
             padding: { x: 8, y: 4 }
         }).setScrollFactor(0).setDepth(10);
+        // Monsters UI
+        this.monstersText = this.add.text(16, 72, this.getMonstersText(), {
+            font: '20px monospace',
+            fill: '#fff',
+            backgroundColor: '#222',
+            padding: { x: 8, y: 4 }
+        }).setScrollFactor(0).setDepth(10);
+        // Controls help
+        this.controlsText = this.add.text(16, 100, 'Controls: SPACE - place mine | M - place monster', {
+            font: '18px monospace',
+            fill: '#fff',
+            backgroundColor: '#222',
+            padding: { x: 8, y: 4 }
+        }).setScrollFactor(0).setDepth(10);
 
         // Input
         this.cursors = this.input.keyboard.createCursorKeys();
         this.shootKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.monsterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
 
         // Flashing state
         this.bossIsFlashing = false;
@@ -91,6 +117,10 @@ export default class MainScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.shootKey) && (time - this.lastShotTime > this.shotCooldown)) {
             this.shootBossMine();
             this.lastShotTime = time;
+        }
+        // Monster summon
+        if (Phaser.Input.Keyboard.JustDown(this.monsterKey)) {
+            this.summonMonster();
         }
 
         // Heroes AI
@@ -151,6 +181,7 @@ export default class MainScene extends Phaser.Scene {
             this.scoreText.setText('Score: ' + this.score);
             this.lastScoreTick += 1000 * ticks;
         }
+        this.monstersText.setText(this.getMonstersText());
     }
 
     handleBossHeroCollision(boss, hero) {
@@ -284,6 +315,48 @@ export default class MainScene extends Phaser.Scene {
         this.scoreText.setText('Score: ' + this.score);
         // Remove hero on hit (for wave system)
         this.removeHero(hero);
+    }
+
+    /**
+     * Summon a monster if available.
+     */
+    summonMonster() {
+        if (this.availableMonsters.length === 0) return;
+        // Remove the first available monster
+        const monsterKey = this.availableMonsters.shift();
+        // Possíveis posições de spawn
+        const positions = [
+            { x: 100, y: 100 },
+            { x: 700, y: 500 },
+            { x: 100, y: 500 },
+            { x: 700, y: 100 }
+        ];
+        // Verifica quais posições estão livres
+        const occupied = this.monsters.getChildren().map(m => `${Math.round(m.x)},${Math.round(m.y)}`);
+        const freePositions = positions.filter(pos => !occupied.includes(`${pos.x},${pos.y}`));
+        if (freePositions.length === 0) {
+            // Não há posições livres, devolve o monstro ao array
+            this.availableMonsters.unshift(monsterKey);
+            return;
+        }
+        // Escolhe uma posição livre aleatória
+        const pos = freePositions[Math.floor(Math.random() * freePositions.length)];
+        const monster = this.monsters.create(pos.x, pos.y, monsterKey);
+        monster.setCollideWorldBounds(true);
+        monster.setDepth(5);
+        // Optional: add simple AI or effects here
+    }
+
+    /**
+     * Returns a string with the monsters available for summoning.
+     */
+    getMonstersText() {
+        if (this.availableMonsters.length === 0) return 'Monsters: None available';
+        const names = this.availableMonsters.map(key => {
+            const m = this.monsterTypes.find(mt => mt.key === key);
+            return m ? m.name : key;
+        });
+        return 'Monsters: ' + names.join(', ');
     }
 
     /**
