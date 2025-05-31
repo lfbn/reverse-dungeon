@@ -33,6 +33,7 @@ export default class MainScene extends Phaser.Scene {
         this.bossMaxHealth = 5;
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
+        this.lastScoreTick = 0; // Track last time score was incremented by time
 
         // Heroes array (empty, will be filled by spawnWave)
         this.heroes = [];
@@ -138,6 +139,15 @@ export default class MainScene extends Phaser.Scene {
 
         if (Phaser.Input.Keyboard.JustDown(this.shootKey)) {
             console.log('Space pressed!');
+        }
+
+        // Score: +10 every second
+        if (!this.lastScoreTick) this.lastScoreTick = time;
+        if (time - this.lastScoreTick >= 1000) {
+            const ticks = Math.floor((time - this.lastScoreTick) / 1000);
+            this.score += 10 * ticks;
+            this.scoreText.setText('Score: ' + this.score);
+            this.lastScoreTick += 1000 * ticks;
         }
     }
 
@@ -263,6 +273,9 @@ export default class MainScene extends Phaser.Scene {
         });
         // Reduce hero speed
         hero.speed = 50;
+        // Increase score by 100 for exploding a hero with a mine
+        this.score += 100;
+        this.scoreText.setText('Score: ' + this.score);
         // Remove hero on hit (for wave system)
         this.removeHero(hero);
     }
