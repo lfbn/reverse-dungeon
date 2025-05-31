@@ -44,7 +44,7 @@ export default class MainScene extends Phaser.Scene {
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
         this.lastScoreTick = 0; // Track last time score was incremented by time
-        this.gameAreaTop = 140; // Limite superior da área de jogo
+        this.gameAreaTop = 140; // Upper limit of the game area
 
         // Heroes array (empty, will be filled by spawnWave)
         this.heroes = [];
@@ -113,7 +113,7 @@ export default class MainScene extends Phaser.Scene {
         else if (this.cursors.down.isDown) moveY = 1;
 
         body.setVelocity(moveX * this.bossSpeed, moveY * this.bossSpeed);
-        // Impedir o boss de entrar na área do dashboard
+        // Prevent boss from entering the dashboard area
         if (this.boss.y - this.bossRadius < this.gameAreaTop) {
             this.boss.y = this.gameAreaTop + this.bossRadius;
             body.setVelocityY(Math.max(0, body.velocity.y));
@@ -139,7 +139,7 @@ export default class MainScene extends Phaser.Scene {
             const body = sprite.body;
             if (!body) return; // Skip if body is missing
 
-            // Impedir heróis de entrar na área do dashboard
+            // Prevent heroes from entering the dashboard area
             if (sprite.y < this.gameAreaTop + 20) {
                 sprite.y = this.gameAreaTop + 20;
                 body.setVelocityY(Math.max(0, body.velocity.y));
@@ -195,9 +195,9 @@ export default class MainScene extends Phaser.Scene {
         }
         this.monstersText.setText(this.getMonstersText());
 
-        // Atualizar temporizadores dos monstros
+        // Update monster timers
         this.monsters.getChildren().forEach(monster => {
-            // Impedir monstros de entrar na área do dashboard
+            // Prevent monsters from entering the dashboard area
             if (monster.y < this.gameAreaTop + 20) {
                 monster.y = this.gameAreaTop + 20;
                 if (monster.body) monster.body.setVelocityY(Math.max(0, monster.body.velocity.y));
@@ -234,7 +234,7 @@ export default class MainScene extends Phaser.Scene {
             }
         });
 
-        // Impedir minas de entrar na área do dashboard
+        // Prevent mines from entering the dashboard area
         this.bossMines.getChildren().forEach(mine => {
             if (mine.y < this.gameAreaTop + 10) {
                 mine.y = this.gameAreaTop + 10;
@@ -308,7 +308,7 @@ export default class MainScene extends Phaser.Scene {
             const pos = spawnPositions[i % spawnPositions.length];
             const patrolPoints = [
                 pos,
-                { x: 800 - pos.x, y: 750 - pos.y + 100 }
+                { x: 800 - pos.x, y: 750 - pos.y + 100 } // adjust for new height
             ];
             const hero = {
                 sprite: this.physics.add.sprite(pos.x, pos.y, heroType),
@@ -347,14 +347,14 @@ export default class MainScene extends Phaser.Scene {
     }
 
     handleMineHeroCollision(mine, heroSprite, hero) {
-        // Garantir que mine é mesmo uma mina
+        // Ensure mine is really a mine
         if (mine.texture && mine.texture.key !== 'mine') {
-            // Trocar argumentos se vierem trocados
+            // Swap arguments if they come swapped
             [mine, heroSprite] = [heroSprite, mine];
         }
-        if (!mine.active || !mine.texture || mine.texture.key !== 'mine') return; // Só atua sobre minas
-        mine.disableBody(true, true); // Torna a mina invisível e inativa imediatamente
-        this.bossMines.remove(mine, true, true); // Remove do grupo e destrói
+        if (!mine.active || !mine.texture || mine.texture.key !== 'mine') return; // Only act on mines
+        mine.disableBody(true, true); // Immediately make the mine invisible and inactive
+        this.bossMines.remove(mine, true, true); // Remove from group and destroy
         // Show explosion animation at mine position
         const explosion = this.add.sprite(mine.x, mine.y, 'explosion').setDepth(20);
         explosion.setScale(1.2);
@@ -383,47 +383,47 @@ export default class MainScene extends Phaser.Scene {
         if (this.availableMonsters.length === 0) return;
         // Remove the first available monster
         const monsterKey = this.availableMonsters.shift();
-        // Possíveis posições de spawn
+        // Possible spawn positions
         const positions = [
             { x: 100, y: 180 },
-            { x: 700, y: 700 },
-            { x: 100, y: 700 },
+            { x: 700, y: 600 },
+            { x: 100, y: 600 },
             { x: 700, y: 180 }
         ];
-        // Verifica quais posições estão livres
+        // Check which positions are free
         const occupied = this.monsters.getChildren().map(m => `${Math.round(m.x)},${Math.round(m.y)}`);
         const freePositions = positions.filter(pos => !occupied.includes(`${pos.x},${pos.y}`));
         if (freePositions.length === 0) {
-            // Não há posições livres, devolve o monstro ao array
+            // No free positions, return monster to array
             this.availableMonsters.unshift(monsterKey);
             return;
         }
-        // Escolhe uma posição livre aleatória
+        // Choose a random free position
         const pos = freePositions[Math.floor(Math.random() * freePositions.length)];
         const monsterType = this.monsterTypes.find(mt => mt.key === monsterKey);
         const monster = this.monsters.create(pos.x, pos.y, monsterKey);
         monster.setCollideWorldBounds(true);
         monster.setDepth(5);
-        // Timer de duração
+        // Duration timer
         monster.summonTime = this.time.now;
-        monster.duration = 30000; // 30 segundos em ms
-        // Texto do temporizador
+        monster.duration = 30000; // 30 seconds in ms
+        // Timer text
         monster.timerText = this.add.text(monster.x, monster.y - 40, '30', {
             font: '18px monospace',
             fill: '#ff0',
             backgroundColor: '#222',
             padding: { x: 4, y: 2 }
         }).setOrigin(0.5).setDepth(20);
-        // Texto do poder
+        // Power text
         monster.powerText = this.add.text(monster.x, monster.y + 40, monsterType.power, {
             font: '13px monospace',
             fill: '#0ff',
             backgroundColor: '#111',
             padding: { x: 2, y: 1 }
         }).setOrigin(0.5).setDepth(20);
-        // Guardar tipo
+        // Store type
         monster.monsterType = monsterType.key;
-        // Aplicar efeito inicial
+        // Apply initial effect
         this.applyMonsterPower(monster);
     }
 
@@ -440,15 +440,15 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
-     * Mostra o ecrã de Game Over e pára o jogo.
+     * Shows the Game Over screen and stops the game.
      */
     showGameOver() {
-        // Parar física e input
+        // Stop physics and input
         this.physics.pause();
         this.input.keyboard.enabled = false;
         this.boss.setTint(0xff0000);
 
-        // Mostrar texto de Game Over
+        // Show Game Over text
         this.add.text(400, 300, 'GAME OVER', {
             font: '48px monospace',
             fill: '#fff',
