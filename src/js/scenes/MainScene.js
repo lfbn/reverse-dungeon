@@ -8,6 +8,7 @@ export default class MainScene extends Phaser.Scene {
         this.heroesPerWave = 2;
         this.heroSpeedBase = 100;
         this.heroTypes = ['hero1', 'hero2', 'hero3'];
+        this.isGameOver = false;
     }
 
     preload() {
@@ -75,6 +76,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     update(time, delta) {
+        if (this.isGameOver) return;
         // Boss movement
         const body = this.boss.body;
         let moveX = 0, moveY = 0;
@@ -158,6 +160,10 @@ export default class MainScene extends Phaser.Scene {
         // Reduce boss health
         this.bossHealth = Math.max(0, this.bossHealth - 1);
         this.healthText.setText('Health: ' + this.bossHealth);
+        if (this.bossHealth === 0) {
+            this.showGameOver();
+            return;
+        }
         // Increase score
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
@@ -278,5 +284,25 @@ export default class MainScene extends Phaser.Scene {
         this.scoreText.setText('Score: ' + this.score);
         // Remove hero on hit (for wave system)
         this.removeHero(hero);
+    }
+
+    /**
+     * Mostra o ecrã de Game Over e pára o jogo.
+     */
+    showGameOver() {
+        // Parar física e input
+        this.physics.pause();
+        this.input.keyboard.enabled = false;
+        this.boss.setTint(0xff0000);
+
+        // Mostrar texto de Game Over
+        this.add.text(400, 300, 'GAME OVER', {
+            font: '48px monospace',
+            fill: '#fff',
+            backgroundColor: '#c0392b',
+            padding: { x: 16, y: 8 }
+        }).setOrigin(0.5).setDepth(100);
+
+        this.isGameOver = true;
     }
 }
