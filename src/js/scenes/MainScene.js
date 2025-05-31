@@ -11,9 +11,9 @@ export default class MainScene extends Phaser.Scene {
         this.isGameOver = false;
         // Monsters system
         this.monsterTypes = [
-            { key: 'bloodeye', name: 'Blood Eye', img: 'assets/images/bloodeye.png' },
-            { key: 'esqueleto', name: 'Esqueleto', img: 'assets/images/esqueleto.png' },
-            { key: 'spacegoop', name: 'Spacegoop', img: 'assets/images/spacegoop.png' }
+            { key: 'bloodeye', name: 'Blood Eye', img: 'assets/images/bloodeye.png', power: 'Heals boss +1 every 10s' },
+            { key: 'esqueleto', name: 'Esqueleto', img: 'assets/images/esqueleto.png', power: 'Boss speed up' },
+            { key: 'spacegoop', name: 'Spacegoop', img: 'assets/images/spacegoop.png', power: 'Slow enemies' }
         ];
         this.availableMonsters = [ 'bloodeye', 'esqueleto', 'spacegoop' ]; // Start with 3
     }
@@ -33,7 +33,7 @@ export default class MainScene extends Phaser.Scene {
         // Boss properties
         this.bossRadius = 40;
         this.bossSpeed = 200;
-        this.boss = this.physics.add.sprite(400, 300, 'boss');
+        this.boss = this.physics.add.sprite(400, 375, 'boss');
         this.boss.body.setCircle(this.bossRadius);
         this.boss.body.setCollideWorldBounds(true);
         this.physics.add.existing(this.boss);
@@ -44,6 +44,7 @@ export default class MainScene extends Phaser.Scene {
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
         this.lastScoreTick = 0; // Track last time score was incremented by time
+        this.gameAreaTop = 140; // Limite superior da área de jogo
 
         // Heroes array (empty, will be filled by spawnWave)
         this.heroes = [];
@@ -53,27 +54,27 @@ export default class MainScene extends Phaser.Scene {
         this.spawnWave();
 
         // UI Texts
-        this.healthText = this.add.text(16, 16, 'Health: ' + this.bossHealth, {
+        this.healthText = this.add.text(16, 30, 'Health: ' + this.bossHealth, {
             font: '20px monospace',
             fill: '#fff',
             backgroundColor: '#222',
             padding: { x: 8, y: 4 }
         }).setScrollFactor(0).setDepth(10);
-        this.scoreText = this.add.text(16, 44, 'Score: ' + this.score, {
+        this.scoreText = this.add.text(16, 60, 'Score: ' + this.score, {
             font: '20px monospace',
             fill: '#fff',
             backgroundColor: '#222',
             padding: { x: 8, y: 4 }
         }).setScrollFactor(0).setDepth(10);
         // Monsters UI
-        this.monstersText = this.add.text(16, 72, this.getMonstersText(), {
+        this.monstersText = this.add.text(16, 90, this.getMonstersText(), {
             font: '20px monospace',
             fill: '#fff',
             backgroundColor: '#222',
             padding: { x: 8, y: 4 }
         }).setScrollFactor(0).setDepth(10);
         // Controls help
-        this.controlsText = this.add.text(16, 100, 'Controls: SPACE - place mine | M - place monster', {
+        this.controlsText = this.add.text(16, 120, 'Controls: SPACE - place mine | M - place monster', {
             font: '18px monospace',
             fill: '#fff',
             backgroundColor: '#222',
@@ -112,6 +113,11 @@ export default class MainScene extends Phaser.Scene {
         else if (this.cursors.down.isDown) moveY = 1;
 
         body.setVelocity(moveX * this.bossSpeed, moveY * this.bossSpeed);
+        // Impedir o boss de entrar na área do dashboard
+        if (this.boss.y - this.bossRadius < this.gameAreaTop) {
+            this.boss.y = this.gameAreaTop + this.bossRadius;
+            body.setVelocityY(Math.max(0, body.velocity.y));
+        }
 
         // Boss attack: shoot mine
         if (Phaser.Input.Keyboard.JustDown(this.shootKey) && (time - this.lastShotTime > this.shotCooldown)) {
@@ -132,6 +138,12 @@ export default class MainScene extends Phaser.Scene {
             const sprite = hero.sprite;
             const body = sprite.body;
             if (!body) return; // Skip if body is missing
+
+            // Impedir heróis de entrar na área do dashboard
+            if (sprite.y < this.gameAreaTop + 20) {
+                sprite.y = this.gameAreaTop + 20;
+                body.setVelocityY(Math.max(0, body.velocity.y));
+            }
 
             // Calculate distance to the boss
             const dx = bossPos.x - sprite.x;
@@ -185,6 +197,11 @@ export default class MainScene extends Phaser.Scene {
 
         // Atualizar temporizadores dos monstros
         this.monsters.getChildren().forEach(monster => {
+            // Impedir monstros de entrar na área do dashboard
+            if (monster.y < this.gameAreaTop + 20) {
+                monster.y = this.gameAreaTop + 20;
+                if (monster.body) monster.body.setVelocityY(Math.max(0, monster.body.velocity.y));
+            }
             if (monster.summonTime !== undefined) {
                 const elapsed = time - monster.summonTime;
                 const remaining = Math.max(0, 30 - Math.floor(elapsed / 1000));
@@ -192,12 +209,36 @@ export default class MainScene extends Phaser.Scene {
                     monster.timerText.setText(remaining.toString());
                     monster.timerText.setPosition(monster.x, monster.y - 40);
                 }
+                if (monster.powerText) {
+                    monster.powerText.setPosition(monster.x, monster.y + 40);
+                }
+                // Blood Eye: cura o boss a cada 10s
+                if (monster.monsterType === 'bloodeye' && !monster._lastHeal) {
+                    monster._lastHeal = monster.summonTime;
+                }
+                if (monster.monsterType === 'bloodeye' && time - monster._lastHeal >= 10000) {
+                    if (this.bossHealth < this.bossMaxHealth) {
+                        this.bossHealth = Math.min(this.bossMaxHealth, this.bossHealth + 1);
+                        this.healthText.setText('Health: ' + this.bossHealth);
+                    }
+                    monster._lastHeal = time;
+                }
                 if (elapsed >= monster.duration) {
-                    // Remove monstro e texto
+                    // Remove monstro e textos
                     if (monster.timerText) monster.timerText.destroy();
+                    if (monster.powerText) monster.powerText.destroy();
+                    this.removeMonsterPower(monster);
                     this.availableMonsters.push(monster.texture.key);
                     monster.destroy();
                 }
+            }
+        });
+
+        // Impedir minas de entrar na área do dashboard
+        this.bossMines.getChildren().forEach(mine => {
+            if (mine.y < this.gameAreaTop + 10) {
+                mine.y = this.gameAreaTop + 10;
+                if (mine.body) mine.body.setVelocityY(Math.max(0, mine.body.velocity.y));
             }
         });
     }
@@ -259,15 +300,15 @@ export default class MainScene extends Phaser.Scene {
             const heroType = this.heroTypes[i % this.heroTypes.length];
             // Spawn at random edge positions
             const spawnPositions = [
-                { x: 150, y: 150 },
-                { x: 650, y: 450 },
-                { x: 150, y: 450 },
-                { x: 650, y: 150 }
+                { x: 150, y: 200 },
+                { x: 650, y: 650 },
+                { x: 150, y: 650 },
+                { x: 650, y: 200 }
             ];
             const pos = spawnPositions[i % spawnPositions.length];
             const patrolPoints = [
                 pos,
-                { x: 800 - pos.x, y: 600 - pos.y }
+                { x: 800 - pos.x, y: 750 - pos.y + 100 }
             ];
             const hero = {
                 sprite: this.physics.add.sprite(pos.x, pos.y, heroType),
@@ -344,10 +385,10 @@ export default class MainScene extends Phaser.Scene {
         const monsterKey = this.availableMonsters.shift();
         // Possíveis posições de spawn
         const positions = [
-            { x: 100, y: 100 },
-            { x: 700, y: 500 },
-            { x: 100, y: 500 },
-            { x: 700, y: 100 }
+            { x: 100, y: 180 },
+            { x: 700, y: 700 },
+            { x: 100, y: 700 },
+            { x: 700, y: 180 }
         ];
         // Verifica quais posições estão livres
         const occupied = this.monsters.getChildren().map(m => `${Math.round(m.x)},${Math.round(m.y)}`);
@@ -359,6 +400,7 @@ export default class MainScene extends Phaser.Scene {
         }
         // Escolhe uma posição livre aleatória
         const pos = freePositions[Math.floor(Math.random() * freePositions.length)];
+        const monsterType = this.monsterTypes.find(mt => mt.key === monsterKey);
         const monster = this.monsters.create(pos.x, pos.y, monsterKey);
         monster.setCollideWorldBounds(true);
         monster.setDepth(5);
@@ -372,6 +414,17 @@ export default class MainScene extends Phaser.Scene {
             backgroundColor: '#222',
             padding: { x: 4, y: 2 }
         }).setOrigin(0.5).setDepth(20);
+        // Texto do poder
+        monster.powerText = this.add.text(monster.x, monster.y + 40, monsterType.power, {
+            font: '13px monospace',
+            fill: '#0ff',
+            backgroundColor: '#111',
+            padding: { x: 2, y: 1 }
+        }).setOrigin(0.5).setDepth(20);
+        // Guardar tipo
+        monster.monsterType = monsterType.key;
+        // Aplicar efeito inicial
+        this.applyMonsterPower(monster);
     }
 
     /**
@@ -404,5 +457,43 @@ export default class MainScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(100);
 
         this.isGameOver = true;
+    }
+
+    /**
+     * Aplica o efeito do poder do monstro.
+     */
+    applyMonsterPower(monster) {
+        if (monster.monsterType === 'esqueleto') {
+            // Aumenta a velocidade do boss
+            if (!this._esqueletoCount) this._esqueletoCount = 0;
+            this._esqueletoCount++;
+            this.bossSpeed += 80;
+        } else if (monster.monsterType === 'spacegoop') {
+            // Diminui a velocidade dos heróis
+            if (!this._spacegoopCount) this._spacegoopCount = 0;
+            this._spacegoopCount++;
+            this.heroes.forEach(hero => {
+                if (!hero._originalSpeed) hero._originalSpeed = hero.speed;
+                hero.speed = Math.max(30, hero.speed - 40);
+            });
+        }
+    }
+
+    /**
+     * Reverte o efeito do poder do monstro ao desaparecer.
+     */
+    removeMonsterPower(monster) {
+        if (monster.monsterType === 'esqueleto') {
+            if (this._esqueletoCount) this._esqueletoCount--;
+            this.bossSpeed = Math.max(100, this.bossSpeed - 80);
+        } else if (monster.monsterType === 'spacegoop') {
+            if (this._spacegoopCount) this._spacegoopCount--;
+            // Se não houver mais spacegoop, repõe velocidade original
+            if (!this._spacegoopCount) {
+                this.heroes.forEach(hero => {
+                    if (hero._originalSpeed) hero.speed = hero._originalSpeed;
+                });
+            }
+        }
     }
 }
