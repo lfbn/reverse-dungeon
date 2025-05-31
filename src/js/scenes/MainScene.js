@@ -3,6 +3,11 @@ import Phaser from 'phaser';
 export default class MainScene extends Phaser.Scene {
     constructor() {
         super('MainScene');
+        // Wave system state
+        this.currentWave = 1;
+        this.heroesPerWave = 2;
+        this.heroSpeedBase = 100;
+        this.heroTypes = ['hero1', 'hero2', 'hero3'];
     }
 
     preload() {
@@ -29,31 +34,10 @@ export default class MainScene extends Phaser.Scene {
         this.bossHealth = this.bossMaxHealth;
         this.score = 0;
 
-        // Heroes
-        this.heroes = [
-            {
-                sprite: this.physics.add.sprite(150, 150, 'hero1'),
-                patrolPoints: [{ x: 150, y: 150 }, { x: 150, y: 450 }],
-                patrolIndex: 0,
-                state: 'patrol',
-                speed: 100,
-            },
-            {
-                sprite: this.physics.add.sprite(650, 450, 'hero2'),
-                patrolPoints: [{ x: 650, y: 450 }, { x: 650, y: 150 }],
-                patrolIndex: 0,
-                state: 'patrol',
-                speed: 100,
-            }
-        ];
-        this.heroes.forEach(hero => {
-            hero.sprite.setCollideWorldBounds(true)
-        });
-
-        // Boss health and score
-        this.bossMaxHealth = 5;
-        this.bossHealth = this.bossMaxHealth;
-        this.score = 0;
+        // Heroes array (empty, will be filled by spawnWave)
+        this.heroes = [];
+        // Spawn first wave
+        this.spawnWave();
 
         // UI Texts
         this.healthText = this.add.text(16, 16, 'Health: ' + this.bossHealth, {
@@ -78,25 +62,7 @@ export default class MainScene extends Phaser.Scene {
         this.bossOriginalColor = 0x3498db;
         this.bossFlashColor = 0xff0000;
 
-        // Overlap detection
-        this.heroes.forEach(hero => {
-            this.physics.add.overlap(this.boss, hero.sprite, this.handleBossHeroCollision, null, this);
-            // Mine-hero overlap
-            this.physics.add.overlap(this.bossMines, hero.sprite, (mine, heroSprite) => {
-                this.handleMineHeroCollision(mine, heroSprite, hero);
-            }, null, this);
-        });
-
-        // Create a group of mines (if you want several)
-        this.mines = this.physics.add.group();
-
-        // Criar animação de explosão
-        this.anims.create({
-            key: 'explosion_anim',
-            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 8 }),
-            frameRate: 20,
-            repeat: 0
-        });
+        // Overlap detection will be set up in spawnWave
     }
 
     update(time, delta) {
@@ -204,11 +170,68 @@ export default class MainScene extends Phaser.Scene {
     }
 
     /**
-     * Handle collision between boss mine and hero.
-     * @param {Phaser.GameObjects.GameObject} mine
-     * @param {Phaser.GameObjects.GameObject} heroSprite
-     * @param {Object} hero
+     * Spawn a new wave of heroes, increasing difficulty each wave.
      */
+    spawnWave() {
+        // Clean up any remaining hero sprites
+        if (this.heroes && this.heroes.length > 0) {
+            this.heroes.forEach(hero => hero.sprite.destroy());
+        }
+        this.heroes = [];
+        // Calculate number of heroes and speed for this wave
+        const numHeroes = this.heroesPerWave + this.currentWave - 1;
+        const speed = this.heroSpeedBase + (this.currentWave - 1) * 10;
+        for (let i = 0; i < numHeroes; i++) {
+            // Pick a hero type in round-robin fashion
+            const heroType = this.heroTypes[i % this.heroTypes.length];
+            // Spawn at random edge positions
+            const spawnPositions = [
+                { x: 150, y: 150 },
+                { x: 650, y: 450 },
+                { x: 150, y: 450 },
+                { x: 650, y: 150 }
+            ];
+            const pos = spawnPositions[i % spawnPositions.length];
+            const patrolPoints = [
+                pos,
+                { x: 800 - pos.x, y: 600 - pos.y }
+            ];
+            const hero = {
+                sprite: this.physics.add.sprite(pos.x, pos.y, heroType),
+                patrolPoints,
+                patrolIndex: 0,
+                state: 'patrol',
+                speed: speed,
+            };
+            hero.sprite.setCollideWorldBounds(true);
+            this.heroes.push(hero);
+        }
+        // Set up overlaps for new heroes
+        this.heroes.forEach(hero => {
+            this.physics.add.overlap(this.boss, hero.sprite, this.handleBossHeroCollision, null, this);
+            this.physics.add.overlap(this.bossMines, hero.sprite, (mine, heroSprite) => {
+                this.handleMineHeroCollision(mine, heroSprite, hero);
+            }, null, this);
+        });
+    }
+
+    /**
+     * Remove hero from array and check for wave clear.
+     */
+    removeHero(heroToRemove) {
+        // Remove from array
+        this.heroes = this.heroes.filter(h => h !== heroToRemove);
+        // Destroy sprite
+        heroToRemove.sprite.destroy();
+        // If all heroes dead, start next wave after short delay
+        if (this.heroes.length === 0) {
+            this.time.delayedCall(1000, () => {
+                this.currentWave++;
+                this.spawnWave();
+            });
+        }
+    }
+
     handleMineHeroCollision(mine, heroSprite, hero) {
         mine.destroy();
         // Show explosion animation at mine position
@@ -225,5 +248,7 @@ export default class MainScene extends Phaser.Scene {
         });
         // Reduce hero speed
         hero.speed = 50;
+        // Remove hero on hit (for wave system)
+        this.removeHero(hero);
     }
 }
