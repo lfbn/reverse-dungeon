@@ -4,7 +4,7 @@ import MainScene from './scenes/MainScene';
 const config = {
     type: Phaser.AUTO,
     width: 800,
-    height: 750,
+    height: 650,
     backgroundColor: '#222222', // Solid background color
     scene: [MainScene],
     physics: {
