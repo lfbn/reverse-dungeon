@@ -62,6 +62,14 @@ export default class MainScene extends Phaser.Scene {
         this.bossOriginalColor = 0x3498db;
         this.bossFlashColor = 0xff0000;
 
+        // Criar animação de explosão
+        this.anims.create({
+            key: 'explosion_anim',
+            frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 8 }),
+            frameRate: 20,
+            repeat: 0
+        });
+
         // Overlap detection will be set up in spawnWave
     }
 
