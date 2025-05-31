@@ -5,7 +5,7 @@ export default class MainScene extends Phaser.Scene {
         super('MainScene');
         // Wave system state
         this.currentWave = 1;
-        this.heroesPerWave = 2;
+        this.heroesPerWave = 1;
         this.heroSpeedBase = 100;
         this.heroTypes = ['hero1', 'hero2', 'hero3'];
         this.isGameOver = false;
@@ -15,7 +15,7 @@ export default class MainScene extends Phaser.Scene {
             { key: 'esqueleto', name: 'Esqueleto', img: 'assets/images/esqueleto.png', power: 'Boss speed up' },
             { key: 'spacegoop', name: 'Spacegoop', img: 'assets/images/spacegoop.png', power: 'Slow enemies' }
         ];
-        this.availableMonsters = [ 'bloodeye', 'esqueleto', 'spacegoop' ]; // Start with 3
+        this.availableMonsters = ['bloodeye', 'esqueleto', 'spacegoop']; // Start with 3
     }
 
     preload() {
