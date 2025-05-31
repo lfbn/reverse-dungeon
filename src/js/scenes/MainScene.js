@@ -182,6 +182,24 @@ export default class MainScene extends Phaser.Scene {
             this.lastScoreTick += 1000 * ticks;
         }
         this.monstersText.setText(this.getMonstersText());
+
+        // Atualizar temporizadores dos monstros
+        this.monsters.getChildren().forEach(monster => {
+            if (monster.summonTime !== undefined) {
+                const elapsed = time - monster.summonTime;
+                const remaining = Math.max(0, 30 - Math.floor(elapsed / 1000));
+                if (monster.timerText) {
+                    monster.timerText.setText(remaining.toString());
+                    monster.timerText.setPosition(monster.x, monster.y - 40);
+                }
+                if (elapsed >= monster.duration) {
+                    // Remove monstro e texto
+                    if (monster.timerText) monster.timerText.destroy();
+                    this.availableMonsters.push(monster.texture.key);
+                    monster.destroy();
+                }
+            }
+        });
     }
 
     handleBossHeroCollision(boss, hero) {
@@ -344,7 +362,16 @@ export default class MainScene extends Phaser.Scene {
         const monster = this.monsters.create(pos.x, pos.y, monsterKey);
         monster.setCollideWorldBounds(true);
         monster.setDepth(5);
-        // Optional: add simple AI or effects here
+        // Timer de duração
+        monster.summonTime = this.time.now;
+        monster.duration = 30000; // 30 segundos em ms
+        // Texto do temporizador
+        monster.timerText = this.add.text(monster.x, monster.y - 40, '30', {
+            font: '18px monospace',
+            fill: '#ff0',
+            backgroundColor: '#222',
+            padding: { x: 4, y: 2 }
+        }).setOrigin(0.5).setDepth(20);
     }
 
     /**
