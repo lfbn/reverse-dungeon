@@ -1,5 +1,5 @@
 # TODO
- - consertar patrol dos heróis (ficam presos nos cantos quando não estão a seguir o boss)
+
 ## Progress
 
 
