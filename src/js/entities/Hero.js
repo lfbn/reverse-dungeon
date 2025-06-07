@@ -30,12 +30,25 @@ export default class Hero {
             if (distToBoss < chaseDistance) {
                 this.state = 'chase';
             } else {
-                const target = this.patrolPoints[this.patrolIndex];
-                const pdx = target.x - sprite.x;
-                const pdy = target.y - sprite.y;
-                const distToPoint = Math.sqrt(pdx * pdx + pdy * pdy);
+                let target = this.patrolPoints[this.patrolIndex];
+                let pdx = target.x - sprite.x;
+                let pdy = target.y - sprite.y;
+                let distToPoint = Math.sqrt(pdx * pdx + pdy * pdy);
+                // If blocked by world bounds, advance patrol point
+                if (body.blocked && (body.blocked.left || body.blocked.right || body.blocked.up || body.blocked.down)) {
+                    this.patrolIndex = (this.patrolIndex + 1) % this.patrolPoints.length;
+                    target = this.patrolPoints[this.patrolIndex];
+                    pdx = target.x - sprite.x;
+                    pdy = target.y - sprite.y;
+                    distToPoint = Math.sqrt(pdx * pdx + pdy * pdy);
+                }
+                // If close to patrol point, advance index and recalculate target
                 if (distToPoint < 5) {
                     this.patrolIndex = (this.patrolIndex + 1) % this.patrolPoints.length;
+                    target = this.patrolPoints[this.patrolIndex];
+                    pdx = target.x - sprite.x;
+                    pdy = target.y - sprite.y;
+                    distToPoint = Math.sqrt(pdx * pdx + pdy * pdy);
                 }
                 const angle = Math.atan2(pdy, pdx);
                 body.setVelocity(Math.cos(angle) * this.speed, Math.sin(angle) * this.speed);

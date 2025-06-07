@@ -261,11 +261,15 @@ export default class MainScene extends Phaser.Scene {
                 { x: 650, y: 200 }
             ];
             const pos = spawnPositions[i % spawnPositions.length];
+            const margin = 40; // Avoid edges
             const patrolPoints = [
-                pos,
                 {
-                    x: Math.max(0, Math.min(800, 800 - pos.x)),
-                    y: Math.max(0, Math.min(600, 750 - pos.y + 100))
+                    x: Math.max(margin, Math.min(800 - margin, pos.x)),
+                    y: Math.max(margin, Math.min(600 - margin, pos.y))
+                },
+                {
+                    x: Math.max(margin, Math.min(800 - margin, 800 - pos.x)),
+                    y: Math.max(margin, Math.min(600 - margin, 750 - pos.y + 100))
                 }
             ];
             const hero = new Hero(this, pos.x, pos.y, heroType, patrolPoints, speed);

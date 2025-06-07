@@ -63,4 +63,21 @@ describe('Hero Entity', () => {
     hero.destroy();
     expect(hero.sprite.destroy).toHaveBeenCalled();
   });
+
+  it('should never stop moving while patrolling', () => {
+    // Spy on setVelocity
+    const setVelocitySpy = vi.fn();
+    hero.sprite.body.setVelocity = setVelocitySpy;
+    hero.sprite.x = 0;
+    hero.sprite.y = 0;
+    hero.patrolIndex = 0;
+    // Simulate update at patrol point (should immediately move to next)
+    hero.update({ x: 1000, y: 1000 }, 10, 10);
+    // Should be called at least once with non-zero velocity
+    const calls = setVelocitySpy.mock.calls;
+    expect(calls.length).toBeGreaterThan(0);
+    for (const [vx, vy] of calls) {
+      expect(Math.abs(vx) + Math.abs(vy)).toBeGreaterThan(0);
+    }
+  });
 }); 
