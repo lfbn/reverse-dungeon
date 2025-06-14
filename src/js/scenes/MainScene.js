@@ -17,7 +17,7 @@ export default class MainScene extends Phaser.Scene {
         // Monsters
         this.monsterTypes = [
             { key: 'bloodeye', name: 'Blood Eye', img: 'assets/images/bloodeye.png', power: 'Heals boss +1 every 10s' },
-            { key: 'esqueleto', name: 'Esqueleto', img: 'assets/images/esqueleto.png', power: 'Boss speed up' },
+            { key: 'esqueleto', name: 'Skeleton', img: 'assets/images/esqueleto.png', power: 'Boss speed up' },
             { key: 'spacegoop', name: 'Spacegoop', img: 'assets/images/spacegoop.png', power: 'Slow enemies' }
         ];
         this.availableMonsters = ['bloodeye', 'esqueleto', 'spacegoop']; // Start with 3
