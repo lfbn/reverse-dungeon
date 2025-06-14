@@ -42,6 +42,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     create() {
+        this.isGameOver = false;
         // Boss properties
         this.bossRadius = 40;
         this.bossSpeed = 200;
@@ -407,6 +408,13 @@ export default class MainScene extends Phaser.Scene {
             backgroundColor: '#c0392b',
             padding: { x: 16, y: 8 }
         }).setOrigin(0.5).setDepth(100);
+        // Adicionar instrução para recomeçar
+        this.add.text(400, 360, 'Press N to restart', {
+            font: '28px monospace',
+            fill: '#fff',
+            backgroundColor: '#222',
+            padding: { x: 12, y: 6 }
+        }).setOrigin(0.5).setDepth(100);
         this.isGameOver = true;
         // Play death sound
         if (this.sound) this.sound.play('death');
@@ -415,6 +423,12 @@ export default class MainScene extends Phaser.Scene {
         if (music && music.isPlaying) {
             music.stop();
         }
+        // Ativar input da tecla N para reiniciar
+        this.input.keyboard.enabled = true;
+        this.restartKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
+        this.restartKey.once('down', () => {
+            this.scene.restart();
+        });
     }
 
     /**

@@ -151,10 +151,14 @@ CLASS MainScene EXTENDS Phaser.Scene
     METHOD showGameOver()
         PAUSE physics and input
         SHOW game over text
+        SHOW instruction: 'Press N to restart'
         SET game over state
         PLAY 'death' sound
         IF 'soundtrack' music is playing
             STOP 'soundtrack' music
+        ENABLE input for key N
+        ONCE key N is pressed
+            RESTART scene
     METHOD applyMonsterPower(monster)
         APPLY effect based on monster type (e.g., speed up boss, slow heroes, heal boss)
     METHOD removeMonsterPower(monster)
