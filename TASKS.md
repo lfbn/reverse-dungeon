@@ -10,51 +10,51 @@
 
 ## Backlog
 
-### 1. **Árvore de Habilidades do Boss**
-- Permitir ao jogador desbloquear e evoluir habilidades especiais do boss (ex: ataques de área, buffs temporários, escudos, etc).
-- Sistema de pontos de experiência ou recursos para investir nessas melhorias.
+### 1. **Boss Skill Tree**
+- Allow the player to unlock and upgrade special boss abilities (e.g., area attacks, temporary buffs, shields, etc).
+- Experience points or resources system to invest in these upgrades.
 
-### 2. **Tipos de Armadilhas Diversificadas**
-- Armadilhas com efeitos diferentes: dano, lentidão, veneno, confusão, etc.
-- Possibilidade de upgrade das armadilhas já colocadas.
+### 2. **Diverse Trap Types**
+- Traps with different effects: damage, slow, poison, confusion, etc.
+- Possibility to upgrade already placed traps.
 
-### 3. **Editor de Layout da Masmorra**
-- Permitir ao jogador personalizar a disposição dos corredores/salas da masmorra antes de cada run.
-- Geração procedural de mapas para maior replayability.
+### 3. **Dungeon Layout Editor**
+- Allow the player to customize the layout of the dungeon's corridors/rooms before each run.
+- Procedural map generation for greater replayability.
 
-### 4. **Sistema de Recursos e Economia**
-- Diferentes tipos de recursos (ouro, mana, almas) para invocar monstros, colocar armadilhas ou usar habilidades.
-- Recompensas por derrotar heróis ou sobreviver a ondas.
+### 4. **Resource and Economy System**
+- Different types of resources (gold, mana, souls) to summon monsters, place traps, or use abilities.
+- Rewards for defeating heroes or surviving waves.
 
-### 5. **Variedade de Monstros e Sinergias**
-- Monstros com poderes únicos e sinergias entre eles (ex: um monstro que potencia outros à volta).
-- Possibilidade de “fusão” de monstros para criar versões mais poderosas.
+### 5. **Variety of Monsters and Synergies**
+- Monsters with unique powers and synergies between them (e.g., a monster that boosts others around it).
+- Possibility of "fusion" of monsters to create more powerful versions.
 
-### 6. **Heróis com Inteligência Artificial Avançada**
-- Heróis que cooperam entre si, usam habilidades especiais, ou tentam evitar armadilhas.
-- “Mini-bosses” ou heróis de elite com poderes únicos.
+### 6. **Heroes with Advanced AI**
+- Heroes that cooperate with each other, use special abilities, or try to avoid traps.
+- "Mini-bosses" or elite heroes with unique powers.
 
-### 7. **Sistema de Missões e Objetivos Secundários**
-- Missões opcionais por onda (ex: sobreviver sem perder vida, eliminar um certo herói, etc).
-- Recompensas extra por cumprir objetivos.
+### 7. **Mission and Secondary Objectives System**
+- Optional missions per wave (e.g., survive without losing health, eliminate a certain hero, etc).
+- Extra rewards for completing objectives.
 
-### 8. **Progressão Roguelike**
-- Elementos desbloqueáveis permanentes entre runs (novos monstros, armadilhas, upgrades).
-- Dificuldade crescente e eventos aleatórios.
+### 8. **Roguelike Progression**
+- Permanently unlockable elements between runs (new monsters, traps, upgrades).
+- Increasing difficulty and random events.
 
-### 9. **Leaderboard e Estatísticas**
-- Ranking local/global de pontuações.
-- Estatísticas detalhadas: monstros invocados, armadilhas usadas, heróis derrotados, etc.
+### 9. **Leaderboard and Statistics**
+- Local/global score ranking.
+- Detailed statistics: monsters summoned, traps used, heroes defeated, etc.
 
-### 10. **Personalização Visual**
-- Skins para o boss, monstros e armadilhas.
-- Efeitos visuais desbloqueáveis.
+### 10. **Visual Customization**
+- Skins for the boss, monsters, and traps.
+- Unlockable visual effects.
 
 ## Done
 
-- Adicionar monstros. Cada monstro dura 30 segundos e adiciona poderes ao boss. Apos 30 segundos pode ser invocado novamente.
-- Adicionar limites/obstáculos ao mapa: Criar paredes ou zonas onde o boss/heróis não podem passar.
-- Implementar waves de herois, ao matar herois, surgem cada vez mais tornando o jogo cada vez mais dificil.
-- Adicionar ataque do boss: Permitir ao boss atacar (ex: disparar um projétil ou fazer uma animação).
-- 03/05/25 - Adicionar UI básica: Mostrar vida do boss, pontuação, etc.
-- 03/05/25 - Movimento automático dos heróis: fazer com que os heróis patrulhem ou persigam o boss.
+- Add monsters. Each monster lasts 30 seconds and adds powers to the boss. After 30 seconds it can be summoned again.
+- Add map limits/obstacles: Create walls or zones where the boss/heroes cannot pass.
+- Implement hero waves: as heroes are killed, more appear, making the game increasingly difficult.
+- Add boss attack: Allow the boss to attack (e.g., shoot a projectile or perform an animation).
+- 03/05/25 - Add basic UI: Show boss health, score, etc.
+- 03/05/25 - Automatic hero movement: make heroes patrol or chase the boss.
