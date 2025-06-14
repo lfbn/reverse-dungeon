@@ -240,7 +240,7 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    /**
+    /*
      * Place a mine from the boss at the current position.
      */
     shootBossMine() {
