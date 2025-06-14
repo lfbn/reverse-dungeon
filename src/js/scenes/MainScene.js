@@ -261,7 +261,7 @@ export default class MainScene extends Phaser.Scene {
         if (this.sound) this.sound.play('plantmine');
     }
 
-    /**
+    /*
      * Spawn a new wave of heroes, increasing difficulty each wave.
      */
     spawnWave() {
@@ -305,7 +305,7 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    /**
+    /*
      * Remove hero from array and check for wave clear.
      */
     removeHero(heroToRemove) {
@@ -344,7 +344,7 @@ export default class MainScene extends Phaser.Scene {
         this.removeHero(hero);
     }
 
-    /**
+    /*
      * Summon a monster if available.
      */
     summonMonster() {
@@ -386,7 +386,7 @@ export default class MainScene extends Phaser.Scene {
         if (this.sound) this.sound.play('monstersummon');
     }
 
-    /**
+    /*
      * Returns a string with the monsters available for summoning.
      */
     getMonstersText() {
@@ -398,7 +398,7 @@ export default class MainScene extends Phaser.Scene {
         return 'Monsters: ' + names.join(', ');
     }
 
-    /**
+    /*
      * Shows the Game Over screen and stops the game.
      */
     showGameOver() {
@@ -434,7 +434,7 @@ export default class MainScene extends Phaser.Scene {
         });
     }
 
-    /**
+    /*
      * Aplica o efeito do poder do monstro.
      */
     applyMonsterPower(monster) {
@@ -452,7 +452,7 @@ export default class MainScene extends Phaser.Scene {
         }
     }
 
-    /**
+    /*
      * Reverte o efeito do poder do monstro ao desaparecer.
      */
     removeMonsterPower(monster) {
