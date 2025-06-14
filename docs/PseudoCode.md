@@ -90,6 +90,11 @@ CLASS MainScene EXTENDS Phaser.Scene
         INITIALIZE game state variables (wave, heroes, monsters, config)
     METHOD preload()
         LOAD images and spritesheets for boss, heroes, monsters, mines, explosion
+        LOAD audio files:
+            - 'plantmine' (plant mine sound)
+            - 'monstersummon' (monster summon sound)
+            - 'death' (death/game over sound)
+            - 'explosion_sfx' (explosion sound)
     METHOD create()
         INITIALIZE boss, health, score, UI texts, controls
         CREATE groups for mines, heroes, monsters
@@ -114,6 +119,7 @@ CLASS MainScene EXTENDS Phaser.Scene
         CREATE mine at boss position
         ADD to mines group
         DESTROY mine on world bounds
+        PLAY 'plantmine' sound
     METHOD spawnWave()
         REMOVE existing heroes
         CALCULATE number and speed of heroes
@@ -127,6 +133,7 @@ CLASS MainScene EXTENDS Phaser.Scene
     METHOD handleMineHeroCollision(mine, heroSprite, hero)
         DISABLE mine
         SHOW explosion animation
+        PLAY 'explosion_sfx' sound
         APPLY damage to hero
         INCREASE score
         REMOVE hero
@@ -136,12 +143,14 @@ CLASS MainScene EXTENDS Phaser.Scene
             SPAWN monster
             SHOW timer and power text
             APPLY monster power
+            PLAY 'monstersummon' sound
     METHOD getMonstersText()
         RETURN string with available monsters
     METHOD showGameOver()
         PAUSE physics and input
         SHOW game over text
         SET game over state
+        PLAY 'death' sound
     METHOD applyMonsterPower(monster)
         APPLY effect based on monster type (e.g., speed up boss, slow heroes, heal boss)
     METHOD removeMonsterPower(monster)
