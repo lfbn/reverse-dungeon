@@ -1,18 +1,18 @@
 ```mermaid
 flowchart TD
-    A[Início: Carregamento da página] --> B[Inicialização Phaser]
-    B --> C[Criação da MainScene]
-    C --> D[Preload - Carrega assets]
-    D --> E[Create - Inicializa Boss, UI, input]
-    E --> F[SpawnWave - Cria primeira vaga de heróis]
-    F --> G[Loop de Update]
+    A[Start: Page Load] --> B[Phaser Initialization]
+    B --> C[MainScene Creation]
+    C --> D[Preload - Load assets]
+    D --> E[Create - Initialize Boss, UI, input]
+    E --> F[SpawnWave - Create first wave of heroes]
+    F --> G[Update Loop]
     G --> H{Game Over?}
-    H -- Não --> I[Jogador move Boss, coloca minas, invoca monstros]
-    I --> J[Heróis patrulham ou perseguem Boss]
-    J --> K[Colisões: Boss vs Heroi, Mina vs Heroi]
-    K --> L[Heróis derrotados?]
-    L -- Sim --> M[RemoveHero - Próxima vaga após delay]
+    H -- No --> I[Player moves Boss, places mines, summons monsters]
+    I --> J[Heroes patrol or chase Boss]
+    J --> K[Collisions: Boss vs Hero, Mine vs Hero]
+    K --> L[Heroes defeated?]
+    L -- Yes --> M[RemoveHero - Next wave after delay]
     M --> F
-    L -- Não --> G
-    H -- Sim --> N[ShowGameOver - Mostra ecrã de fim de jogo]
+    L -- No --> G
+    H -- Yes --> N[ShowGameOver - Show game over screen]
 ```

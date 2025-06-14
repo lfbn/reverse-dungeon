@@ -1,35 +1,35 @@
-## Reverse Dungeon — O que faz este jogo?
+## Reverse Dungeon — What does this game do?
 
-**Reverse Dungeon** é um jogo de estratégia e defesa de masmorra, onde assumes o papel do boss final (o vilão principal) de uma masmorra. O teu objetivo é defender a masmorra contra ondas sucessivas de heróis invasores, utilizando armadilhas (minas), monstros aliados (minions) e habilidades especiais.
+**Reverse Dungeon** is a strategy and dungeon defense game where you play as the final boss (the main villain) of a dungeon. Your goal is to defend the dungeon against successive waves of invading heroes, using traps (mines), allied monsters (minions), and special abilities.
 
-### Mecânica principal
+### Main Mechanics
 
-- **Jogas como o boss:** Controlas diretamente o boss, movendo-o pelo ecrã.
-- **Defesa ativa:** Colocas minas no chão para explodir heróis e invocas monstros com poderes especiais para te ajudarem a defender.
-- **Gestão de recursos:** Só podes invocar monstros se estiverem disponíveis, e cada um tem um efeito temporário.
-- **Ondas de heróis:** Em cada ronda, aparecem heróis com diferentes comportamentos, que tentam chegar até ti e derrotar-te.
-- **Sobrevivência:** O objetivo é sobreviver ao maior número possível de ondas, mantendo a tua vida (health) acima de zero.
-- **Pontuação:** Ganhas pontos ao sobreviver, eliminar heróis e usar bem os teus recursos.
+- **You play as the boss:** You directly control the boss, moving him around the screen.
+- **Active defense:** Place mines on the ground to blow up heroes and summon monsters with special powers to help you defend.
+- **Resource management:** You can only summon monsters if they are available, and each one has a temporary effect.
+- **Hero waves:** In each round, heroes with different behaviors appear, trying to reach and defeat you.
+- **Survival:** The goal is to survive as many waves as possible, keeping your health above zero.
+- **Scoring:** You earn points by surviving, eliminating heroes, and using your resources wisely.
 
-### Como se joga
+### How to Play
 
-- **Movimento:** Usas as setas do teclado para mover o boss.
-- **Colocar mina:** Pressionas a tecla SPACE para colocar uma mina na posição atual do boss.
-- **Invocar monstro:** Pressionas a tecla M para invocar um monstro aliado, se disponível.
-- **Evitar o dashboard:** Não podes entrar na área do topo do ecrã (dashboard), que mostra a tua vida, score e monstros disponíveis.
+- **Movement:** Use the arrow keys to move the boss.
+- **Place mine:** Press the SPACE key to place a mine at the boss's current position.
+- **Summon monster:** Press the M key to summon an allied monster, if available.
+- **Avoid the dashboard:** You cannot enter the top area of the screen (dashboard), which shows your health, score, and available monsters.
 
-### Monstros aliados
+### Allied Monsters
 
-- Cada monstro tem um poder especial, por exemplo:
-  - **Blood Eye:** Cura o boss periodicamente.
-  - **Esqueleto:** Aumenta a velocidade do boss.
-  - **Spacegoop:** Abranda os heróis.
+- Each monster has a special power, for example:
+  - **Blood Eye:** Periodically heals the boss.
+  - **Skeleton:** Increases the boss's speed.
+  - **Spacegoop:** Slows down the heroes.
 
-### Fim do jogo
+### End of the Game
 
-- O jogo termina quando a vida do boss chega a zero, mostrando um ecrã de "Game Over".
+- The game ends when the boss's health reaches zero, showing a "Game Over" screen.
 
 ---
 
-**Resumo:**
-É um jogo de defesa onde, em vez de seres o herói, és o boss da masmorra a tentar sobreviver às investidas dos heróis, usando armadilhas, monstros e estratégia.
+**Summary:**
+It's a defense game where, instead of being the hero, you are the dungeon boss trying to survive the heroes' assaults, using traps, monsters, and strategy.
