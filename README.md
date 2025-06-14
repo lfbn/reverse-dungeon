@@ -1,5 +1,9 @@
 # Reverse Dungeon
 
+## 🖼️ Game Screenshot
+
+![Game Screenshot](assets/images/game-print.png)
+
 A dungeon defense game where you play as the final boss, defending your territory against invading heroes.
 
 ## 🎮 Description
