@@ -1,12 +1,12 @@
 # Reverse Dungeon
 
-Um jogo de defesa de masmorra onde assumes o papel do boss final, defendendo o teu território contra heróis invasores.
+A dungeon defense game where you play as the final boss, defending your territory against invading heroes.
 
-## 🎮 Descrição
+## 🎮 Description
 
-Final Boss Dungeon é um jogo de estratégia e defesa onde o jogador controla o boss final de uma masmorra. O objetivo é defender a masmorra contra ondas de heróis invasores, utilizando armadilhas, minions e habilidades especiais.
+Reverse Dungeon is a strategy and defense game where the player controls the final boss of a dungeon. The goal is to defend the dungeon against waves of invading heroes, using traps, minions, and special abilities.
 
-## 🛠️ Tecnologias Utilizadas
+## 🛠️ Technologies Used
 
 - HTML5
 - CSS3
@@ -14,10 +14,10 @@ Final Boss Dungeon é um jogo de estratégia e defesa onde o jogador controla o 
 - Phaser.js 3.70.0
 - Vite (bundler)
 
-## 📁 Estrutura do Projeto
+## 📁 Project Structure
 
 ```
-/FinalBossDungeon
+/ReverseDungeon
 ├── index.html
 ├── assets/
 │   ├── images/
@@ -34,63 +34,63 @@ Final Boss Dungeon é um jogo de estratégia e defesa onde o jogador controla o 
 └── package.json
 ```
 
-## 🚀 Como Iniciar
+## 🚀 Getting Started
 
-1. Instala as dependências:
+1. Install dependencies:
 ```bash
 npm install
 ```
 
-2. Inicia o servidor de desenvolvimento:
+2. Start the development server:
 ```bash
 npm run dev
 ```
 
-3. Para construir o projeto:
+3. To build the project:
 ```bash
 npm run build
 ```
 
-4. Para pré-visualizar a versão de produção:
+4. To preview the production build:
 ```bash
 npm run preview
 ```
 
-## 🎯 Funcionalidades
+## 🎯 Features
 
-- Sistema de combate
-- Sistema de defesa da masmorra
-- Sistema de recursos
-- Sistema de inimigos
-- Sistema de progressão
-- Sistema de power-ups
+- Combat system
+- Dungeon defense system
+- Resource system
+- Enemy system
+- Progression system
+- Power-up system
 
-## 🎨 Estilo Visual
+## 🎨 Visual Style
 
 - Pixel Art
-- Resolução: 800x600
-- Estilo visual retro
+- Resolution: 800x600
+- Retro visual style
 
-## 🎮 Mecânicas de Jogo
+## 🎮 Game Mechanics
 
-- Controlo do boss final
-- Defesa da masmorra contra heróis invasores
-- Colocação de armadilhas e minions
-- Sistema de recursos para construção de defesas
-- Diferentes tipos de heróis com habilidades únicas
-- Sistema de ondas de ataque
+- Control the final boss
+- Defend the dungeon against invading heroes
+- Place traps and minions
+- Resource system for building defenses
+- Different types of heroes with unique abilities
+- Wave-based attack system
 
-## 🎯 Objetivos do Jogo
+## 🎯 Game Objectives
 
-- Defender a masmorra contra ondas de heróis
-- Gerir recursos eficientemente
-- Desbloquear novas habilidades e defesas
-- Sobreviver ao maior número possível de ondas
+- Defend the dungeon against waves of heroes
+- Manage resources efficiently
+- Unlock new abilities and defenses
+- Survive as many waves as possible
 
-## 🤝 Contribuição
+## 🤝 Contributing
 
-Contribuições são bem-vindas! Por favor, lê o guia de contribuição antes de submeter um pull request.
+Contributions are welcome! Please read the contribution guide before submitting a pull request.
 
-## 📝 Licença
+## 📝 License
 
-Este projeto está licenciado sob a licença MIT - vê o arquivo LICENSE para mais detalhes.
+This project is licensed under the MIT License - see the LICENSE file for details.
