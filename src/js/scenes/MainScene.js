@@ -88,6 +88,7 @@ export default class MainScene extends Phaser.Scene {
             backgroundColor: '#222',
             padding: { x: 8, y: 4 }
         }).setScrollFactor(0).setDepth(10);
+        this.monstersText.setFixedSize(400, 32);
         // Controls help
         this.controlsText = this.add.text(16, 120, 'Controls: SPACE - place mine | M - place monster', {
             font: '18px monospace',
@@ -182,11 +183,11 @@ export default class MainScene extends Phaser.Scene {
             if (monster.summonTime !== undefined) {
                 const elapsed = time - monster.summonTime;
                 const remaining = Math.max(0, 30 - Math.floor(elapsed / 1000));
-                if (monster.timerText) {
+                if (monster.timerText && monster.timerText.active) {
                     monster.timerText.setText(remaining.toString());
                     monster.timerText.setPosition(monster.x, monster.y - 40);
                 }
-                if (monster.powerText) {
+                if (monster.powerText && monster.powerText.active) {
                     monster.powerText.setPosition(monster.x, monster.y + 40);
                 }
                 // Blood Eye: heal boss every 10s
@@ -201,8 +202,14 @@ export default class MainScene extends Phaser.Scene {
                     monster._lastHeal = time;
                 }
                 if (elapsed >= monster.duration) {
-                    if (monster.timerText) monster.timerText.destroy();
-                    if (monster.powerText) monster.powerText.destroy();
+                    if (monster.timerText) {
+                        monster.timerText.destroy();
+                        monster.timerText = null;
+                    }
+                    if (monster.powerText) {
+                        monster.powerText.destroy();
+                        monster.powerText = null;
+                    }
                     this.removeMonsterPower(monster);
                     this.availableMonsters.push(monster.texture.key);
                     monster.destroy();
