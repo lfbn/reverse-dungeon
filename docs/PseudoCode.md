@@ -153,6 +153,8 @@ CLASS MainScene EXTENDS Phaser.Scene
         SHOW game over text
         SET game over state
         PLAY 'death' sound
+        IF 'soundtrack' music is playing
+            STOP 'soundtrack' music
     METHOD applyMonsterPower(monster)
         APPLY effect based on monster type (e.g., speed up boss, slow heroes, heal boss)
     METHOD removeMonsterPower(monster)

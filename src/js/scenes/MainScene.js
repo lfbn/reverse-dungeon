@@ -410,6 +410,11 @@ export default class MainScene extends Phaser.Scene {
         this.isGameOver = true;
         // Play death sound
         if (this.sound) this.sound.play('death');
+        // Stop background music if playing
+        const music = this.sound.get('soundtrack');
+        if (music && music.isPlaying) {
+            music.stop();
+        }
     }
 
     /**
