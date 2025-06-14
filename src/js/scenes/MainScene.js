@@ -37,6 +37,8 @@ export default class MainScene extends Phaser.Scene {
         this.load.audio('monstersummon', 'assets/sounds/monstersummon.mp3');
         this.load.audio('death', 'assets/sounds/death.mp3');
         this.load.audio('explosion_sfx', 'assets/sounds/explosion.mp3');
+        // Load background music
+        this.load.audio('soundtrack', 'assets/sounds/soundtrack.mp3');
     }
 
     create() {
@@ -109,6 +111,14 @@ export default class MainScene extends Phaser.Scene {
         });
 
         // Overlap detection will be set up in spawnWave
+
+        // Play background music (looped)
+        if (!this.sound.get('soundtrack')) {
+            this.sound.add('soundtrack', { loop: true, volume: 0.5 }).play();
+        } else {
+            const music = this.sound.get('soundtrack');
+            if (!music.isPlaying) music.play();
+        }
     }
 
     update(time, delta) {

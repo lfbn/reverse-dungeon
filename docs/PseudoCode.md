@@ -95,11 +95,13 @@ CLASS MainScene EXTENDS Phaser.Scene
             - 'monstersummon' (monster summon sound)
             - 'death' (death/game over sound)
             - 'explosion_sfx' (explosion sound)
+            - 'soundtrack' (background music, looped)
     METHOD create()
         INITIALIZE boss, health, score, UI texts, controls
         CREATE groups for mines, heroes, monsters
         SPAWN first wave
         SETUP input and animations
+        PLAY 'soundtrack' audio in loop as background music
     METHOD update(time, delta)
         HANDLE boss movement and restrict area
         HANDLE mine placement and monster summoning
