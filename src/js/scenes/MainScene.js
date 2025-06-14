@@ -32,6 +32,11 @@ export default class MainScene extends Phaser.Scene {
         this.load.spritesheet('explosion', 'assets/images/explosion.png', { frameWidth: 64, frameHeight: 64 });
         // Load monster images
         this.monsterTypes.forEach(m => this.load.image(m.key, m.img));
+        // Load sound effects
+        this.load.audio('plantmine', 'assets/sounds/plantmine.mp3');
+        this.load.audio('monstersummon', 'assets/sounds/monstersummon.mp3');
+        this.load.audio('death', 'assets/sounds/death.mp3');
+        this.load.audio('explosion_sfx', 'assets/sounds/explosion.mp3');
     }
 
     create() {
@@ -238,6 +243,8 @@ export default class MainScene extends Phaser.Scene {
         });
 
         this.bossMines.add(mine);
+        // Play plant mine sound
+        if (this.sound) this.sound.play('plantmine');
     }
 
     /**
@@ -308,6 +315,8 @@ export default class MainScene extends Phaser.Scene {
         const explosion = this.add.sprite(mine.x, mine.y, 'explosion').setDepth(20);
         explosion.setScale(1.2);
         explosion.play('explosion_anim');
+        // Play explosion sound
+        if (this.sound) this.sound.play('explosion_sfx');
         explosion.on('animationcomplete', () => {
             explosion.destroy();
         });
@@ -359,6 +368,8 @@ export default class MainScene extends Phaser.Scene {
         }).setOrigin(0.5).setDepth(20);
         monster.monsterType = monsterType.key;
         this.applyMonsterPower(monster);
+        // Play monster summon sound
+        if (this.sound) this.sound.play('monstersummon');
     }
 
     /**
@@ -387,6 +398,8 @@ export default class MainScene extends Phaser.Scene {
             padding: { x: 16, y: 8 }
         }).setOrigin(0.5).setDepth(100);
         this.isGameOver = true;
+        // Play death sound
+        if (this.sound) this.sound.play('death');
     }
 
     /**
