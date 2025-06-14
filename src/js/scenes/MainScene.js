@@ -43,6 +43,8 @@ export default class MainScene extends Phaser.Scene {
 
     create() {
         this.isGameOver = false;
+        this.heroesPerWave = 1;
+        this.currentWave = 1;
         // Boss properties
         this.bossRadius = 40;
         this.bossSpeed = 200;
